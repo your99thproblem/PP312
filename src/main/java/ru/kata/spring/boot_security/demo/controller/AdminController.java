@@ -2,12 +2,10 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.thymeleaf.util.StringUtils;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
@@ -40,7 +38,7 @@ public class AdminController {
     @GetMapping("/admin/new_user")
     public String newUser(Model model) {
         Collection<Role> lr = roleService.selectAllRoles();
-        Long rolesToUsers = null;
+        String[] rolesToUsers = null;
         model.addAttribute("user", new User());
         model.addAttribute("listRoles", lr);
         model.addAttribute("rolesToUser", rolesToUsers);
@@ -49,10 +47,16 @@ public class AdminController {
 
     @PostMapping("/admin/new_user")
     public String addUser(@ModelAttribute("user") User user,
-                          @ModelAttribute("rolesToUser") Long rolesToUsers) {
-
+                          @RequestParam("rolesToUser") String[] rolesToUsers) {
+        System.out.println("check");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.addRole(user, rolesToUsers);
+        List<Role> list = new ArrayList<>();
+        for (String id :
+                rolesToUsers) {
+            list.add(roleService.findRoleById(Long.valueOf(id)));
+        }
+        user.setUserRoles(list);
+        System.out.println("check");
         userService.saveUser(user);
         return "redirect:/admin";
     }
@@ -75,13 +79,21 @@ public class AdminController {
 
     @PostMapping("/admin/update/{id}")
     public String editUser(@PathVariable("id") Long id,
-                           @ModelAttribute("rolesToUser") Long rolesToUsers,
+                           @RequestParam(value = "rolesToUser", required = false) String[] rolesToUsers,
                            User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userService.addRole(user, rolesToUsers);
+        System.out.println("check");
+        List<Role> list = new ArrayList<>();
+        for (String roleId:
+             rolesToUsers) {
+            list.add(roleService.findRoleById(Long.valueOf(roleId)));
+            }
+        user.setUserRoles(list);
+        System.out.println("check");
         userService.update(user);
         return "redirect:/admin";
     }
+
     @PostMapping(value = "/admin/deleteroles/{id}")
     public String deleteRolesUser(@PathVariable("id") Long id) {
         userService.deleteRolesOfUser(id);

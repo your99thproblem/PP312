@@ -21,7 +21,7 @@
         <input type="text" th:field="*{password}" id="password" placeholder="Password">
     </div>
     <div>
-        <select th:object="${rolesToUser}" name="rolesToUser">
+        <select name="rolesToUser" id="roles" multiple="multiple">
             <option th:each="role : ${listRoles}" th:value="${role.id}" th:text="${role.role}"></option>
         </select>
     </div>

@@ -69,14 +69,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userDao.update(user);
     }
 
-    @Override
-    public User addRole(User user, Long id) {
-
-            List<Role> list = new ArrayList<>();
-            list.add(roleDao.findRoleById(id));
-            user.setUserRoles(list);
-        return user;
-    }
 
     @Override
     @Transactional
