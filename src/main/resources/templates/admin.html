@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>Users</title>
+</head>
+<body>
+<div align="center">
+    <div sec:authorize="hasRole('ROLE_USER')">
+        <a href="/user">Admin's Profile</a>
+    </div>
+    <h2>Users</h2>
+    <h3><a href="/admin/new_user">New User</a></h3>
+
+
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Password</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+        <tr th:each="user : ${listUser}">
+            <td th:utext="${user.id}">id</td>
+            <td th:utext="${user.username}">username</td>
+            <td th:utext="${user.name}">name</td>
+            <td th:utext="${user.password}">password</td>
+            <td>
+                <p th:each="role : ${user.getUserRoles()}">
+                    <span th:text="${role.role}">Role</span>
+                </p>
+            </td>
+            <td>
+                <form action="#" th:action="@{'/admin/edit/{id}'(id=${user.id})}" th:method="post">
+                    <button type="submit" class="btn">
+                        Edit
+                    </button>
+                </form>
+                <form action="#" th:action="@{'/admin/deleteroles/{id}'(id=${user.id})}" th:method="post">
+                    <button type="submit" class="btn">
+                        Delete roles of user
+                    </button>
+                </form>
+
+                <form action="#" th:action="@{'/admin/delete/{id}'(id=${user.id})}" th:method="post">
+                    <button type="submit" class="btn">
+                        Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+        </forEach>
+    </table>
+    <a th:href="@{/logout}">Logout</a>
+</div>
+</body>
+</html>
