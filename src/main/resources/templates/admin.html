@@ -29,7 +29,7 @@
             <td th:utext="${user.name}">name</td>
             <td th:utext="${user.password}">password</td>
             <td>
-                <p th:each="role : ${user.getUserRoles()}">
+                <p th:each="role : ${user.userRoles}">
                     <span th:text="${role.role}">Role</span>
                 </p>
             </td>
@@ -37,11 +37,6 @@
                 <form action="#" th:action="@{'/admin/edit/{id}'(id=${user.id})}" th:method="post">
                     <button type="submit" class="btn">
                         Edit
-                    </button>
-                </form>
-                <form action="#" th:action="@{'/admin/deleteroles/{id}'(id=${user.id})}" th:method="post">
-                    <button type="submit" class="btn">
-                        Delete roles of user
                     </button>
                 </form>
 

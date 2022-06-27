@@ -13,4 +13,5 @@ public interface RoleDao {
 
     Role findByRoleName(String role);
     void detete(Long id);
+    public Collection<Role> makingListOfRolesByArray(String[] arr);
 }

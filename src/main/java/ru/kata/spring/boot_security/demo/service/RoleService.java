@@ -8,4 +8,5 @@ import java.util.Collection;
 public interface RoleService {
     public Collection<Role> selectAllRoles();
     public Role findRoleById(Long userId);
+    public Collection<Role> makingRolesForUser(String[] arr);
 }

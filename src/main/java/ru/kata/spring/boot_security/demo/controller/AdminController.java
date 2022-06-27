@@ -6,14 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 @Controller
 public class AdminController {
@@ -27,21 +23,15 @@ public class AdminController {
 
     @GetMapping(value = "/admin")
     public ModelAndView home() {
-        User user = new User();
-
-        List<User> lu = userService.selectAllUsers();
         ModelAndView mav = new ModelAndView("admin");
-        mav.addObject("listUser", lu);
+        mav.addObject("listUser", userService.selectAllUsers());
         return mav;
     }
 
     @GetMapping("/admin/new_user")
     public String newUser(Model model) {
-        Collection<Role> lr = roleService.selectAllRoles();
-        String[] rolesToUsers = null;
         model.addAttribute("user", new User());
-        model.addAttribute("listRoles", lr);
-        model.addAttribute("rolesToUser", rolesToUsers);
+        model.addAttribute("listRoles", roleService.selectAllRoles());
         return "new_user";
     }
 
@@ -50,13 +40,7 @@ public class AdminController {
                           @RequestParam("rolesToUser") String[] rolesToUsers) {
         System.out.println("check");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        List<Role> list = new ArrayList<>();
-        for (String id :
-                rolesToUsers) {
-            list.add(roleService.findRoleById(Long.valueOf(id)));
-        }
-        user.setUserRoles(list);
-        System.out.println("check");
+        user.setUserRoles(roleService.makingRolesForUser(rolesToUsers));
         userService.saveUser(user);
         return "redirect:/admin";
     }
@@ -71,9 +55,8 @@ public class AdminController {
     @PostMapping("/admin/edit/{id}")
     public String editUserForm(@PathVariable("id") Long id, Model model) {
         User user = userService.findUserById(id);
-        Collection<Role> lr = roleService.selectAllRoles();
         model.addAttribute("user", user);
-        model.addAttribute("listRoles", lr);
+        model.addAttribute("listRoles", roleService.selectAllRoles());
         return "edit_user";
     }
 
@@ -82,14 +65,7 @@ public class AdminController {
                            @RequestParam(value = "rolesToUser", required = false) String[] rolesToUsers,
                            User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        System.out.println("check");
-        List<Role> list = new ArrayList<>();
-        for (String roleId:
-             rolesToUsers) {
-            list.add(roleService.findRoleById(Long.valueOf(roleId)));
-            }
-        user.setUserRoles(list);
-        System.out.println("check");
+        user.setUserRoles(roleService.makingRolesForUser(rolesToUsers));
         userService.update(user);
         return "redirect:/admin";
     }

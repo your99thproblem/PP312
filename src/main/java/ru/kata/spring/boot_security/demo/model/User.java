@@ -69,7 +69,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return (Collection<? extends GrantedAuthority>) getUserRoles();
+        return getUserRoles();
     }
 
     public String getPassword() {
@@ -98,5 +98,27 @@ public class User implements UserDetails {
                 ", password='" + password + '\'' +
                 ", roles=" + userRoles +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        if (!getId().equals(user.getId())) return false;
+        if (!getUsername().equals(user.getUsername())) return false;
+        if (getName() != null ? !getName().equals(user.getName()) : user.getName() != null) return false;
+        return getPassword() != null ? getPassword().equals(user.getPassword()) : user.getPassword() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getUsername().hashCode();
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getPassword() != null ? getPassword().hashCode() : 0);
+        return result;
     }
 }
