@@ -45,4 +45,13 @@ public class UserDaoImpl implements UserDao {
                 .executeUpdate();
     }
 
+    @Override
+    public User getUserByNameWithRoles(String username) {
+        User user = entityManager.createQuery("Select u from User u WHERE u.username = :username", User.class).setParameter("username", username)
+                .getSingleResult();
+//        user.setUserRoles();
+        return null;
+    }
+
+
 }

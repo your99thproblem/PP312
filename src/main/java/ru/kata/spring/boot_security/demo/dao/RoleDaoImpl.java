@@ -15,16 +15,6 @@ public class RoleDaoImpl implements RoleDao {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Override
-    public void save(Role role) {
-        entityManager.persist(role);
-
-    }
-
-    @Override
-    public Role update(Role role) {
-        return entityManager.merge(role);
-    }
 
     @Override
     public Collection<Role> findAll() {
@@ -36,18 +26,6 @@ public class RoleDaoImpl implements RoleDao {
         return entityManager.find(Role.class, id);
     }
 
-    @Override
-    public Role findByRoleName(String role) {
-        return entityManager.createQuery("Select u from Role u WHERE u.role = :role", Role.class).setParameter("role", role)
-                .getSingleResult();
-    }
-
-    @Override
-    public void detete(Long id) {
-        entityManager.createQuery("DELETE FROM Role u where u.id =:id")
-                .setParameter("id", id)
-                .executeUpdate();
-    }
 
     @Override
     public Collection<Role> makingListOfRolesByArray(String[] arr) {
@@ -57,5 +35,4 @@ public class RoleDaoImpl implements RoleDao {
         }
         return list;
     }
-
 }

@@ -11,4 +11,5 @@ public interface UserDao {
     User findById(Long id);
     User findByUsername(String username);
     void detete(Long id);
+    User getUserByNameWithRoles(String name);
 }

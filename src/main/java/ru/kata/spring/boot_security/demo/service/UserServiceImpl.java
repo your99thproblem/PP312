@@ -18,23 +18,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
     @Autowired
     UserDao userDao;
     @Autowired
     RoleDao roleDao;
 
-    @Transactional
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = findUserByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException(String.format("User '%s' not found", username));
-        }
-
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getUserRoles()));
-    }
 
     @Transactional
     public User findUserById(Long userId) {
@@ -76,10 +65,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.getUserRoles().clear();
         System.out.println("check");
         userDao.update(user);
-    }
-
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole())).collect(Collectors.toList());
     }
 
 }

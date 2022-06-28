@@ -25,6 +25,7 @@ public class AdminController {
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView("admin");
         mav.addObject("listUser", userService.selectAllUsers());
+        System.out.println("check");
         return mav;
     }
 
