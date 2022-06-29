@@ -10,5 +10,5 @@ public interface UserService {
     public void saveUser(User user, String[] roles);
     public void delete(Long id);
     public void update(User user);
-    public User findUserByUsername(String username);
+    public User getUserByUsernameWithRoles(String username);
 }

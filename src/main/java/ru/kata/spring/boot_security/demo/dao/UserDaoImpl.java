@@ -19,7 +19,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void save(User user, String[] roles) {
         for (String ids : roles) {
-            roleDao.findRoleById(Long.valueOf(ids));
             user.addRole(roleDao.findRoleById(Long.valueOf(ids)));
         }
         entityManager.persist(user);
@@ -32,7 +31,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> findAll() {
-        return entityManager.createQuery("SELECT a FROM User a", User.class).getResultList();
+        return entityManager.createQuery("Select u from User u ", User.class).getResultList();
     }
 
     @Override
@@ -41,26 +40,18 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User findByUsername(String username) {
-        return entityManager.createQuery("Select u from User u WHERE u.username = :username", User.class).setParameter("username", username)
-                .getSingleResult();
-    }
-
-    @Override
     public void detete(Long id) {
-        entityManager.createQuery("DELETE FROM User u where u.id =:id")
-                .setParameter("id", id)
-                .executeUpdate();
+        entityManager.remove(findById(id));
     }
 
     @Override
-    public User getUserByNameWithRoles(String username, String[] roles) {
-        User user = entityManager.createQuery("Select u from User u WHERE u.username = :username", User.class).setParameter("username", username)
+    public User getUserByNameWithRoles(String username) {
+        User user = entityManager.createQuery("Select u from User u " +
+                        "join fetch u.listRoles lr " +
+                        "join fetch lr.role " +
+                        "WHERE u.username = :username", User.class)
+                .setParameter("username", username)
                 .getSingleResult();
-        for (String ids : roles) {
-            roleDao.findRoleById(Long.valueOf(ids));
-            user.addRole(roleDao.findRoleById(Long.valueOf(ids)));
-        }
         return user;
     }
 

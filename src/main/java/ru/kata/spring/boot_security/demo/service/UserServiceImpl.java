@@ -23,8 +23,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public User findUserByUsername(String username) {
-        return userDao.findByUsername(username);
+    public User getUserByUsernameWithRoles(String username) {
+        return userDao.getUserByNameWithRoles(username);
     }
 
     @Transactional

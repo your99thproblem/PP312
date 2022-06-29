@@ -9,7 +9,6 @@ public interface UserDao {
     User update(User user);
     List<User> findAll();
     User findById(Long id);
-    User findByUsername(String username);
     void detete(Long id);
-    public User getUserByNameWithRoles(String username, String[] rolesId);
+    public User getUserByNameWithRoles(String username);
 }

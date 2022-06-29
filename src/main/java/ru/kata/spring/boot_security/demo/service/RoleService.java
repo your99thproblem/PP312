@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface RoleService {
     public List<Role> selectAllRoles();
-    public Role findRoleById(Long userId);
     public User addRolesToUser(User user, String[] arr);
 }
