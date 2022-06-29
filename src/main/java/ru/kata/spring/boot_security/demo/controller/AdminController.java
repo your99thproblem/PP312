@@ -41,8 +41,7 @@ public class AdminController {
                           @RequestParam("rolesToUser") String[] rolesToUsers) {
         System.out.println("check");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setUserRoles(roleService.makingRolesForUser(rolesToUsers));
-        userService.saveUser(user);
+        userService.saveUser(user, rolesToUsers);
         return "redirect:/admin";
     }
 
@@ -66,15 +65,9 @@ public class AdminController {
                            @RequestParam(value = "rolesToUser", required = false) String[] rolesToUsers,
                            User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setUserRoles(roleService.makingRolesForUser(rolesToUsers));
+        roleService.addRolesToUser(user, rolesToUsers);
+        System.out.println("check");
         userService.update(user);
-        return "redirect:/admin";
-    }
-
-    @PostMapping(value = "/admin/deleteroles/{id}")
-    public String deleteRolesUser(@PathVariable("id") Long id) {
-        userService.deleteRolesOfUser(id);
-        System.out.println("delete");
         return "redirect:/admin";
     }
 }

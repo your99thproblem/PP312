@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.dao;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.model.User;
 
@@ -12,9 +13,15 @@ import java.util.List;
 public class UserDaoImpl implements UserDao {
     @PersistenceContext
     private EntityManager entityManager;
+    @Autowired
+    private RoleDao roleDao;
 
     @Override
-    public void save(User user) {
+    public void save(User user, String[] roles) {
+        for (String ids : roles) {
+            roleDao.findRoleById(Long.valueOf(ids));
+            user.addRole(roleDao.findRoleById(Long.valueOf(ids)));
+        }
         entityManager.persist(user);
     }
 
@@ -32,6 +39,7 @@ public class UserDaoImpl implements UserDao {
     public User findById(Long id) {
         return entityManager.find(User.class, id);
     }
+
     @Override
     public User findByUsername(String username) {
         return entityManager.createQuery("Select u from User u WHERE u.username = :username", User.class).setParameter("username", username)
@@ -46,11 +54,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User getUserByNameWithRoles(String username) {
+    public User getUserByNameWithRoles(String username, String[] roles) {
         User user = entityManager.createQuery("Select u from User u WHERE u.username = :username", User.class).setParameter("username", username)
                 .getSingleResult();
-//        user.setUserRoles();
-        return null;
+        for (String ids : roles) {
+            roleDao.findRoleById(Long.valueOf(ids));
+            user.addRole(roleDao.findRoleById(Long.valueOf(ids)));
+        }
+        return user;
     }
 
 

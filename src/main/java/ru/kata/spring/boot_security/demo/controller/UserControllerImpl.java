@@ -14,9 +14,8 @@ public class UserControllerImpl {
     UserService userService;
 
     @GetMapping("/user")
-    public String editUserForm(Model model) {
+    public String UserForm(Model model) {
         User user = userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-        System.out.println("check");
         model.addAttribute("user", user);
         model.addAttribute("listRoles", user.getUserRoles());
         return "user";

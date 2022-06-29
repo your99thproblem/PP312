@@ -9,10 +9,10 @@
 <div th:text="${user.name}"></div>
 <label>Username</label>
 <div th:text="${user.username}"></div>
-<!--<label>List of roles</label>-->
-<!--<div th:each="role:${listRoles}">-->
-<!--    <div th:text="${role.role}"></div>-->
-<!--</div>-->
+<label>List of roles</label>
+<div th:each="role:${listRoles}">
+    <div th:text="${role.getRole().getRole()}"></div>
+</div>
 <div sec:authorize="hasRole('ROLE_ADMIN')">
     <a href="/admin">Return to Admin panel</a>
 </div>

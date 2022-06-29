@@ -11,9 +11,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.model.UserRole;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -33,7 +35,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getUserRoles()));
     }
 
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> userRoles) {
-        return userRoles.stream().map(r -> new SimpleGrantedAuthority(r.getRole())).collect(Collectors.toList());
+    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(List<UserRole> userRoles) {
+        return userRoles.stream().map(r -> new SimpleGrantedAuthority(r.getRole().getRole())).collect(Collectors.toList());
     }
 }

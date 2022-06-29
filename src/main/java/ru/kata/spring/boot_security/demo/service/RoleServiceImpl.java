@@ -5,8 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.model.Role;
+import ru.kata.spring.boot_security.demo.model.User;
 
-import java.util.Collection;
+import java.util.List;
 
 @Service
 public class RoleServiceImpl implements RoleService{
@@ -14,7 +15,7 @@ public class RoleServiceImpl implements RoleService{
     RoleDao roleDao;
     @Override
     @Transactional
-    public Collection<Role> selectAllRoles() {
+    public List<Role> selectAllRoles() {
         return roleDao.findAll();
     }
 
@@ -25,8 +26,8 @@ public class RoleServiceImpl implements RoleService{
     }
     @Override
     @Transactional
-    public Collection<Role> makingRolesForUser(String[] arr) {
-        return roleDao.makingListOfRolesByArray(arr);
+    public User addRolesToUser(User user, String[] arr) {
+        return roleDao.addRolesByIds(user, arr);
 
     }
 

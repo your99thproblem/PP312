@@ -4,24 +4,24 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
+import java.util.Iterator;
+import java.util.List;
 
-@Entity
+@Entity(name = "User")
 @Table(name = "users")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
     private String username;
     private String name;
     private String password;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> userRoles;
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<UserRole> listRoles = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -67,9 +67,10 @@ public class User implements UserDetails {
         this.name = name;
     }
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getUserRoles();
+        return null;
     }
 
     public String getPassword() {
@@ -80,14 +81,33 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Collection<Role> getUserRoles() {
-        return userRoles;
+    public List<UserRole> getUserRoles() {
+        return listRoles;
     }
 
-    public void setUserRoles(Collection<Role> roles) {
-        this.userRoles = roles;
+    public void setUserRoles(List<UserRole> listRoles) {
+        this.listRoles = listRoles;
     }
 
+    public void addRole(Role role) {
+        UserRole userRole = new UserRole(this, role);
+        listRoles.add(userRole);
+        role.getUsers().add(userRole);
+    }
+
+    public void removeRole(Role role) {
+        for (Iterator<UserRole> iterator = listRoles.iterator();
+        iterator.hasNext(); ) {
+            UserRole userRole = iterator.next();
+            if (userRole.getUser().equals(this) &&
+            userRole.getRole().equals(role)) {
+                iterator.remove();
+                userRole.getRole().getUsers().remove(userRole);
+                userRole.setUser(null);
+                userRole.setRole(null);
+            }
+        }
+    }
 
     @Override
     public String toString() {
@@ -96,7 +116,7 @@ public class User implements UserDetails {
                 ", username='" + username + '\'' +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
-                ", roles=" + userRoles +
+                ", roles=" + listRoles +
                 '}';
     }
 

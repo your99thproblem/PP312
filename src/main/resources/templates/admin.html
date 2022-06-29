@@ -29,8 +29,8 @@
             <td th:utext="${user.name}">name</td>
             <td th:utext="${user.password}">password</td>
             <td>
-                <p th:each="role : ${user.userRoles}">
-                    <span th:text="${role.role}">Role</span>
+                <p th:each="role : ${user.getUserRoles()}">
+                    <span th:text="${role.getRole().role}">Role</span>
                 </p>
             </td>
             <td>
