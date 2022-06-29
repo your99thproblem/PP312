@@ -25,7 +25,6 @@ public class AdminController {
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView("admin");
         mav.addObject("listUser", userService.selectAllUsers());
-        System.out.println("check");
         return mav;
     }
 
@@ -65,9 +64,7 @@ public class AdminController {
                            @RequestParam(value = "rolesToUser", required = false) String[] rolesToUsers,
                            User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        roleService.addRolesToUser(user, rolesToUsers);
-        System.out.println("check");
-        userService.update(user);
+        userService.update(user, rolesToUsers);
         return "redirect:/admin";
     }
 }

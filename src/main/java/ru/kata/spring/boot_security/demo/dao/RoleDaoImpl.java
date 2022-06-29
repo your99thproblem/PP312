@@ -24,13 +24,4 @@ public class RoleDaoImpl implements RoleDao {
     public Role findRoleById(Long id) {
         return entityManager.find(Role.class, id);
     }
-
-
-    @Override
-    public User addRolesByIds(User user, String[] arr) {
-        for (String id : arr) {
-            user.addRole(entityManager.createQuery("select u from Role u where u.id = :role", Role.class).setParameter("role", Long.valueOf(id)).getSingleResult());
-        }
-        return user;
-    }
 }

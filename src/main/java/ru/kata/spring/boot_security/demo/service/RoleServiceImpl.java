@@ -19,9 +19,4 @@ public class RoleServiceImpl implements RoleService{
         return roleDao.findAll();
     }
 
-    @Override
-    @Transactional
-    public User addRolesToUser(User user, String[] arr) {
-        return roleDao.addRolesByIds(user, arr);
-    }
 }

@@ -11,5 +11,4 @@ public interface RoleDao {
 
     public Role findRoleById(Long id);
 
-    public User addRolesByIds(User user, String[] arr);
 }

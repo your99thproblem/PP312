@@ -25,7 +25,10 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User update(User user) {
+    public User update(User user, String[] roles) {
+        for (String ids : roles) {
+            user.addRole(roleDao.findRoleById(Long.valueOf(ids)));
+        }
         return entityManager.merge(user);
     }
 
